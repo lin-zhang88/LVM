@@ -72,7 +72,7 @@ The step() function checks for pending interrupts before fetching instructions. 
     - Loading message showing bytes loaded
     - Execution status
     - Final register state (R0-R7 and Flags)
-    - Coverage report (see example below)
+    - Coverage report
 
 ## Test Programs
 
@@ -81,8 +81,8 @@ The project includes five test programs:
 - `fib.lavm`: Fibonacci sequence calculation
 - `interrupt_test.lavm`: Tests interrupt handling
 - `alignment_test.lavm`: Tests memory alignment checks
-- `illegal_test.lavm`: Triggers RESULT_ILLEGAL (assembles to `illegal.bin`)
-- `unaligned_test.lavm`: Triggers RESULT_UNALIGNED (assembles to `unaligned.bin`)
+- `illegal_test.lavm`: Triggers illegal instruction handling (RESULT_ILLEGAL)
+- `unaligned_test.lavm`: Triggers unaligned memory access handling (RESULT_UNALIGNED)
 
 ## Output
 
