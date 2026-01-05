@@ -14,3 +14,6 @@ bin/
 core
 core.*
 
+# Test output
+coverage_output.txt
+
