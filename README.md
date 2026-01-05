@@ -1,4 +1,4 @@
-**LVM4: Lightweight Virtual Machine (Milestone 4)**
+***LVM4: Lightweight Virtual Machine (Milestone 4)***
 *Project Overview*
 
 This repository contains a complete implementation of the LVM4 specification. It features a 16-bit virtual machine engine written in x86 assembly (AT&T syntax), a custom assembler, and a test suite designed for full code-path coverage.
