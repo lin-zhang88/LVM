@@ -1,0 +1,5 @@
+# Unaligned memory access test
+# This program will trigger unaligned error by:
+# Setting SP (R7) to odd value, then doing RET
+# We'll create raw binary since assembler doesn't support direct register setting
+

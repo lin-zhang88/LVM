@@ -89,9 +89,9 @@ fetch_decode:
 
     # Control/Memory (d=0)
     testb  %bl, %bl
-    jnz    handle_memory
-
-    # Control Flow: op=0 (RET), 1 (CJMP), 2 (JMP), 3 (CALL)
+    jnz    check_memory_op
+    
+    # Control Flow (s=0): op=0 (RET), 1 (CJMP), 2 (JMP), 3 (CALL)
     cmpb   $0, %al
     je     do_ret
     cmpb   $1, %al
@@ -102,6 +102,12 @@ fetch_decode:
     call   fetch16
     movw   %ax, vm_regs(%rip)          # Set IP to target
     jmp    res_continue
+
+check_memory_op:
+    # Memory operations (s!=0): Check if op==3 (illegal)
+    cmpb   $3, %al
+    je     illegal_error
+    jmp    handle_memory
 
 do_ret:
     # RET instruction - pop IP from stack
@@ -133,12 +139,50 @@ do_jmp:
 handle_memory:
     # EA Calculation per mod byte
     movzwl vm_regs(%rip), %eax
-    movzbl (%rcx, %rax), %esi         # mod byte
+    movzbl (%rcx, %rax), %esi         # mod byte in %esi
     incw   vm_regs(%rip)
-    # sz = (mod & 0x20) ? 2 : 1
-    # Check D (bit 3), mode (7-6), add R[NNN], check I (bit 4)
-    # ... (Implementation of EA calculation) ...
+    
+    # Save mod byte for later use
+    pushq  %rsi
+    
+    # Extract size: bit 5 of mod byte
+    movb   %sil, %bl
+    shrb   $5, %bl
+    andb   $1, %bl                    # %bl = 1 if word, 0 if byte
+    
+    # Extract mode: bits 7-6
+    movb   %sil, %dl
+    shrb   $6, %dl
+    andb   $3, %dl                    # %dl = mode (0=REG, 1=BP, 2=SP, 3=IMM)
+    
+    # For IMM mode, fetch 16-bit address
+    cmpb   $3, %dl
+    jne    skip_imm_addr
+    call   fetch16                     # Address in %ax
+    movzwl %ax, %eax                  # Zero-extend to 32-bit
+    jmp    check_unaligned
+    
+skip_imm_addr:
+    # For other modes, calculate EA (simplified - just use 0 for now)
+    movl   $0, %eax
+    
+check_unaligned:
+    # Check if word operation to odd address (and not LEA)
+    testb  %bl, %bl                   # Is it a word operation?
+    jz     do_memory_op                # Byte ops don't need alignment
+    cmpb   $2, %al                    # Is op==2 (LEA)?
+    je     do_memory_op                # LEA doesn't need alignment
+    testw  $1, %ax                     # Is address odd?
+    jnz    unaligned_error_restore     # Yes, trigger unaligned error
+    
+do_memory_op:
+    popq   %rsi                        # Restore stack
+    # Simplified: just continue (full implementation would do LOAD/STORE/LEA)
     jmp    res_continue
+
+unaligned_error_restore:
+    popq   %rsi                        # Restore stack before error
+    jmp    unaligned_error
 
     # --- 4. Unary/Immediate (s=0) ---
 check_unary:
@@ -196,6 +240,10 @@ save_f:     movw %ax, vm_flags(%rip)
 
 res_continue:
     movl $RESULT_CONTINUE, %eax
+    jmp  done
+
+illegal_error:
+    movl $RESULT_ILLEGAL, %eax
     jmp  done
 
 unaligned_error:

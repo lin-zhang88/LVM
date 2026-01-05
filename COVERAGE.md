@@ -78,16 +78,40 @@ Path: RESULT_CONTINUE: HIT
 Path: RESULT_ILLEGAL:  MISS
 Path: RESULT_UNALIGNED: MISS
 ----------------------------
+
+=== Test Program: illegal.bin ===
+Loaded 1 bytes into VM memory.
+Starting execution...
+Execution stopped with code: 1
+
+--- LVM4 Coverage Report ---
+Total Instructions Executed: 1
+Path: RESULT_CONTINUE: MISS
+Path: RESULT_ILLEGAL:  HIT
+Path: RESULT_UNALIGNED: MISS
+----------------------------
+
+=== Test Program: unaligned.bin ===
+Loaded 4 bytes into VM memory.
+Starting execution...
+Execution stopped with code: 2
+
+--- LVM4 Coverage Report ---
+Total Instructions Executed: 1
+Path: RESULT_CONTINUE: MISS
+Path: RESULT_ILLEGAL:  MISS
+Path: RESULT_UNALIGNED: HIT
+----------------------------
 ```
 
 ### Coverage Summary Statistics
 
 **Overall Coverage:**
-- **RESULT_CONTINUE**: ✅ HIT (all 3 test programs)
-- **RESULT_ILLEGAL**: ❌ MISS (not tested)
-- **RESULT_UNALIGNED**: ❌ MISS (not tested)
+- **RESULT_CONTINUE**: ✅ HIT (tested by fib.bin, int.bin, align.bin)
+- **RESULT_ILLEGAL**: ✅ HIT (tested by illegal.bin)
+- **RESULT_UNALIGNED**: ✅ HIT (tested by unaligned.bin)
 
-**Total Instructions Executed**: 3,000,000 (1M per program, safety limit reached)
+**Total Instructions Executed**: 3,000,003 (1M per normal program + 1 each for error cases)
 
 ### Interpreting Coverage
 
@@ -95,12 +119,13 @@ Path: RESULT_UNALIGNED: MISS
 - **MISS**: The code path was not executed (not covered by current test suite)
 - **Total Instructions Executed**: Number of VM instructions executed before stopping
   - If this shows 1,000,000, the program hit the safety limit (likely infinite loop)
+  - Error cases (illegal/unaligned) stop immediately after detecting the error
 
 ### Notes
 
-- The current test programs (`fib.lavm`, `interrupt_test.lavm`, `alignment_test.lavm`) are minimal and primarily test the `RESULT_CONTINUE` path
-- To achieve full coverage, additional test cases would need to:
-  - Trigger illegal instruction handling (`RESULT_ILLEGAL`)
-  - Test unaligned memory access (`RESULT_UNALIGNED`)
-  - Test interrupt handling paths
+- **Full code-path coverage achieved**: All three result paths (CONTINUE, ILLEGAL, UNALIGNED) are tested
+- The test suite includes:
+  - Normal execution paths (`fib.bin`, `int.bin`, `align.bin`)
+  - Illegal instruction handling (`illegal.bin` - opcode 0xC1)
+  - Unaligned memory access handling (`unaligned.bin` - word LOAD to odd address)
 

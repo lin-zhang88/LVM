@@ -1,0 +1,5 @@
+# Illegal instruction test
+# This file will be manually assembled to create an illegal opcode
+# Format: op=3, d=0, s=1 -> 0b11000001 = 0xC1
+# This is an illegal memory operation (op=3 with d=0, s!=0)
+
