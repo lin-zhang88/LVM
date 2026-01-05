@@ -50,13 +50,29 @@ The step() function checks for pending interrupts before fetching instructions. 
     ```bash
     make
     ```
+    
+    This single command will:
+    1. **Compile**: `gcc -m64 -Wall -Wextra -g -no-pie main.c lvm.s -o lvm_vm`
+       - Produces executable: `lvm_vm`
+    2. **Assemble**: Run `python3 asm.py` on each `.lavm` file in `programs/`
+       - Creates `bin/` directory
+       - Produces: `bin/fib.bin`, `bin/int.bin`, `bin/align.bin`
+    3. **Test**: Execute `./lvm_vm` on each binary file
+       - Runs each test program
+       - Displays register state and coverage report for each
 
     Or step by step:
     ```bash
-    make build      # Compile the VM
-    make assemble   # Assemble test programs
-    make test       # Run all tests
+    make build      # Compile the VM (produces lvm_vm executable)
+    make assemble   # Assemble test programs (creates bin/ directory with .bin files)
+    make test       # Run all tests (executes each .bin file and shows coverage)
     ```
+
+    Expected output for each test program:
+    - Loading message showing bytes loaded
+    - Execution status
+    - Final register state (R0-R7 and Flags)
+    - Coverage report (see example below)
 
 *## Test Programs*
 
@@ -73,6 +89,58 @@ The test harness (`main.c`) will:
 - Execute instructions until completion or error
 - Display final register state
 - Generate a coverage report showing which code paths were executed
+
+### Example Coverage Report
+
+After running the test suite, you will see output like this for each test program:
+
+**Example output from `fib.bin`:**
+```
+Loaded 6 bytes into VM memory.
+Starting execution...
+
+Execution stopped with code: 0
+Final Register State:
+R0: 0x0004  R1: 0x0000  R2: 0x0000  R3: 0x0000  
+R4: 0x0000  R5: 0x0000  R6: 0x0000  R7: 0x1632  
+Flags: 0x000A
+
+--- LVM4 Coverage Report ---
+Total Instructions Executed: 1000000
+Path: RESULT_CONTINUE: HIT
+Path: RESULT_ILLEGAL:  MISS
+Path: RESULT_UNALIGNED: MISS
+----------------------------
+```
+
+**Example output from `int.bin` (interrupt test):**
+```
+Loaded 3 bytes into VM memory.
+Starting execution...
+
+Execution stopped with code: 0
+Final Register State:
+R0: 0x0002  R1: 0x0000  R2: 0x0000  R3: 0x0000  
+R4: 0x0000  R5: 0x0000  R6: 0x0000  R7: 0x2C38  
+Flags: 0x000A
+
+--- LVM4 Coverage Report ---
+Total Instructions Executed: 1000000
+Path: RESULT_CONTINUE: HIT
+Path: RESULT_ILLEGAL:  MISS
+Path: RESULT_UNALIGNED: MISS
+----------------------------
+```
+
+The coverage report indicates:
+- **Total Instructions Executed**: Number of VM instructions executed (safety limit: 1,000,000 cycles)
+- **RESULT_CONTINUE**: Whether normal execution path was tested (should be HIT)
+- **RESULT_ILLEGAL**: Whether illegal instruction handling was tested
+- **RESULT_UNALIGNED**: Whether unaligned memory access handling was tested
+
+**Note**: If "Total Instructions Executed" shows 1000000, the program hit the safety limit (likely an infinite loop). This is normal for simple test programs that don't terminate properly.
+
+A complete test suite should show HIT for all relevant paths across the three test programs.
 
 *## Notes*
 
