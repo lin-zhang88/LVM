@@ -81,8 +81,8 @@ The project includes five test programs:
 - `fib.lavm`: Fibonacci sequence calculation
 - `interrupt_test.lavm`: Tests interrupt handling
 - `alignment_test.lavm`: Tests memory alignment checks
-- `illegal_test.bin`: Tests illegal instruction handling (triggers RESULT_ILLEGAL)
-- `unaligned_test.bin`: Tests unaligned memory access handling (triggers RESULT_UNALIGNED)
+- `illegal_test.lavm`: Triggers RESULT_ILLEGAL (assembles to `illegal.bin`)
+- `unaligned_test.lavm`: Triggers RESULT_UNALIGNED (assembles to `unaligned.bin`)
 
 *## Output*
 
