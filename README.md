@@ -74,7 +74,7 @@ The step() function checks for pending interrupts before fetching instructions. 
     - Final register state (R0-R7 and Flags)
     - Coverage report (see example below)
 
-*## Test Programs*
+## Test Programs
 
 The project includes five test programs:
 
@@ -84,7 +84,7 @@ The project includes five test programs:
 - `illegal_test.lavm`: Triggers RESULT_ILLEGAL (assembles to `illegal.bin`)
 - `unaligned_test.lavm`: Triggers RESULT_UNALIGNED (assembles to `unaligned.bin`)
 
-*## Output*
+## Output
 
 The test harness (`main.c`) will:
 - Load the binary into VM memory
@@ -104,13 +104,12 @@ See [COVERAGE.md](COVERAGE.md) for the brief coverage report and reproduction st
 - Error handling is minimal and assumes well-formed input programs.
 - The implementation targets Linux x86-64; macOS execution requires the provided Docker workflow.
 
-*## Notes*
+## Notes
 
 - The VM uses x86-64 assembly (AT&T syntax), so you need a Linux x86-64 environment
-- The assembler (`asm.py`) supports a subset of LVM instructions
 - Coverage tracking helps verify that all code paths in `lvm.s` are tested
 
-*## Architecture Requirements*
+## Architecture Requirements
 
 **Important**: This project requires a Linux x86-64 environment. It will not compile on:
 - ARM64 systems (Apple Silicon, ARM servers)
