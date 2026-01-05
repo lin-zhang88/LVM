@@ -1,8 +1,8 @@
-LVM4: Lightweight Virtual Machine (Milestone 4)
-Project Overview
+**LVM4: Lightweight Virtual Machine (Milestone 4)**
+*Project Overview*
 
 This repository contains a complete implementation of the LVM4 specification. It features a 16-bit virtual machine engine written in x86 assembly (AT&T syntax), a custom assembler, and a test suite designed for full code-path coverage.
-Components
+*Components*
 
     lvm.s: The VM core. It implements the step() function, handling 16-bit ALU operations, complex memory addressing, and interrupt logic.
 
@@ -12,7 +12,7 @@ Components
 
     Makefile: Automates the build, assembly, and testing process end-to-end.
 
-Design Notes
+*Design Notes*
 1. Memory Access & Addressing
 
 The VM implements the full reg/mod table for Effective Address (EA) calculation:
@@ -31,8 +31,8 @@ The step() function checks for pending interrupts before fetching instructions. 
 
     The RET instruction acts as an IRET when IE=0, restoring the saved flags from the stack.
 
-How to Build and Run
-Prerequisites
+**How to Build and Run**
+*Prerequisites*
 
     Linux x86-64 environment
 
@@ -42,7 +42,7 @@ Prerequisites
 
     make
 
-Instructions
+*Instructions*
 
     Clone the repository and navigate to the project root.
 
@@ -58,7 +58,7 @@ Instructions
     make test       # Run all tests
     ```
 
-## Test Programs
+*## Test Programs*
 
 The project includes three test programs:
 
@@ -66,7 +66,7 @@ The project includes three test programs:
 - `interrupt_test.lavm`: Tests interrupt handling
 - `alignment_test.lavm`: Tests memory alignment checks
 
-## Output
+*## Output*
 
 The test harness (`main.c`) will:
 - Load the binary into VM memory
@@ -74,13 +74,13 @@ The test harness (`main.c`) will:
 - Display final register state
 - Generate a coverage report showing which code paths were executed
 
-## Notes
+*## Notes*
 
 - The VM uses x86-64 assembly (AT&T syntax), so you need a Linux x86-64 environment
 - The assembler (`asm.py`) supports a subset of LVM instructions
 - Coverage tracking helps verify that all code paths in `lvm.s` are tested
 
-## Architecture Requirements
+*## Architecture Requirements*
 
 **Important**: This project requires a Linux x86-64 environment. It will not compile on:
 - ARM64 systems (Apple Silicon, ARM servers)
