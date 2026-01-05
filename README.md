@@ -142,6 +142,18 @@ The coverage report indicates:
 
 A complete test suite should show HIT for all relevant paths across the three test programs.
 
+Coverage generation instructions and a brief report are provided in [COVERAGE.md](COVERAGE.md).
+
+## Known Limitations
+
+- The assembler (`asm.py`) supports a subset of the LVM4 instruction set required for this implementation:
+  - **Supported ALU operations**: MOV, ADD, AND, XOR
+  - **Supported memory operations**: LOAD, STORE, LEA
+  - **Supported control flow**: RET, JMP, CALL
+  - **Unsupported instructions**: Shift operations (left/right, arithmetic/logical), NOT, NEG, CJMP (conditional jump)
+- Error handling is minimal and assumes well-formed input programs.
+- The implementation targets Linux x86-64; macOS execution requires the provided Docker workflow.
+
 *## Notes*
 
 - The VM uses x86-64 assembly (AT&T syntax), so you need a Linux x86-64 environment
