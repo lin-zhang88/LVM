@@ -54,9 +54,9 @@ The step() function checks for pending interrupts before fetching instructions. 
     This single command will:
     1. **Compile**: `gcc -m64 -Wall -Wextra -g -no-pie main.c lvm.s -o lvm_vm`
        - Produces executable: `lvm_vm`
-    2. **Assemble**: Run `python3 asm.py` on each `.lavm` file in `programs/`
+    2. **Assemble**: Run `python3 asm.py` on each `.lavm` file in `programs/` and copy binary test files
        - Creates `bin/` directory
-       - Produces: `bin/fib.bin`, `bin/int.bin`, `bin/align.bin`
+       - Produces: `bin/fib.bin`, `bin/int.bin`, `bin/align.bin`, `bin/illegal.bin`, `bin/unaligned.bin`
     3. **Test**: Execute `./lvm_vm` on each binary file
        - Runs each test program
        - Displays register state and coverage report for each
@@ -76,11 +76,13 @@ The step() function checks for pending interrupts before fetching instructions. 
 
 *## Test Programs*
 
-The project includes three test programs:
+The project includes five test programs:
 
 - `fib.lavm`: Fibonacci sequence calculation
 - `interrupt_test.lavm`: Tests interrupt handling
 - `alignment_test.lavm`: Tests memory alignment checks
+- `illegal_test.bin`: Tests illegal instruction handling (triggers RESULT_ILLEGAL)
+- `unaligned_test.bin`: Tests unaligned memory access handling (triggers RESULT_UNALIGNED)
 
 *## Output*
 
@@ -140,7 +142,7 @@ The coverage report indicates:
 
 **Note**: If "Total Instructions Executed" shows 1000000, the program hit the safety limit (likely an infinite loop). This is normal for simple test programs that don't terminate properly.
 
-A complete test suite should show HIT for all relevant paths across the three test programs.
+A complete test suite should show HIT for all relevant paths across all five test programs.
 
 Coverage generation instructions and a brief report are provided in [COVERAGE.md](COVERAGE.md).
 
