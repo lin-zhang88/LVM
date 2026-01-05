@@ -1,0 +1,10 @@
+# Interrupt test program
+# This program tests interrupt handling
+
+# Simple ALU operations
+MOV R1 R2
+ADD R1 R3
+
+# Return
+RET
+

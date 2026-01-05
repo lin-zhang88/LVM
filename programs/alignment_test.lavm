@@ -1,0 +1,10 @@
+# Alignment test program
+# Tests memory alignment checks
+
+# Simple operations
+MOV R1 R2
+ADD R1 R3
+
+# Return
+RET
+

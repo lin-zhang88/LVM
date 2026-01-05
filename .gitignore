@@ -1,0 +1,16 @@
+# Build artifacts
+lvm_vm
+*.o
+bin/
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.log
+core
+core.*
+
